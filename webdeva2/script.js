@@ -280,29 +280,25 @@ function main() {
     InitWebPage();
 }
 
-function convertToNumber(value) {
-    return (1.0 * value);
-}
-
 /* Runs functions when the website finish loading */
 document.addEventListener("DOMContentLoaded", function () {
     main();
 
 
-    var inFSMode = false
+    var inFSMode = false;
     let fsButton = document.getElementById("fsButton");
     fsButton.addEventListener("click", function()
     {
         if (inFSMode == false)
         {
-            enterFullscreen()
+            enterFullscreen();
         }
         else
         {
             exitFullscreen();
         }
         inFSMode = !inFSMode;
-    })
+    });
 
     // Function to enter fullscreen mode
     function enterFullscreen() {
@@ -328,19 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     const planeName = document.querySelector("#game-name");
     const planeEngine = document.querySelector("#game-engine");
     const planeWing = document.querySelector("#game-wing");
@@ -359,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ["18", "0.9"],
         ["30", "0.89"],
         ["25", "0.89"]
-    ]
+    ];
 
     let wingArray = [
         ["0.75", "0.9"],
@@ -367,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ["0.7", "0.89"],
         ["0.78", "0.89"],
         ["0.8", "0.82"]
-    ]
+    ];
 
     submitButton.addEventListener("click", function () {
         finalPlaneName.innerHTML = planeName.value;
@@ -376,8 +359,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let engineNumeber = planeEngine.value;
         let wingNumeber = planeWing.value;
 
-        finalPlaneCost.innerHTML = "$" + parseFloat(engineArray[parseInt(engineNumeber)][0]) + parseFloat(wingArray[parseInt(wingNumeber)][0]) + "M"
-        finalPlaneSpeed.innerHTML = parseFloat(engineArray[parseInt(engineNumeber)][1]) + parseFloat(wingArray[parseInt(wingNumeber)][1]) + "KM/H"
+        finalPlaneCost.innerHTML = "$" + parseFloat(engineArray[parseInt(engineNumeber)][0]) + parseFloat(wingArray[parseInt(wingNumeber)][0]) + "M";
+        finalPlaneSpeed.innerHTML = parseFloat(engineArray[parseInt(engineNumeber)][1]) + parseFloat(wingArray[parseInt(wingNumeber)][1]) + "KM/H";
     });
 
     var spawnTimer = 0.0;
@@ -621,9 +604,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // Used To Toggle The Cards To Flip
     var cards = document.querySelectorAll('.flip-card');
     for (let card of cards) {
-        card.addEventListener('click', function () {
+        card.addEventListener('click', flipCard(card));
+    }
+
+    function flipCard(card)
+    {
+        return function()
+        {
             card.classList.toggle('is-flipped');
-        });
+        };
     }
 
     // Used To Toggle (Hide & Show) The Top Navigation Bar When In Mobile Size
@@ -634,7 +623,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function ToggleNav() {
-        let selection = `#${currentPageID} .nav-links`;
+        let selection = "#" + currentPageID + " .nav-links";
 
         let nav = document.querySelector(selection);
 
