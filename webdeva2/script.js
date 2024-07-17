@@ -288,6 +288,59 @@ function convertToNumber(value) {
 document.addEventListener("DOMContentLoaded", function () {
     main();
 
+
+    var inFSMode = false
+    let fsButton = document.getElementById("fsButton");
+    fsButton.addEventListener("click", function()
+    {
+        if (inFSMode == false)
+        {
+            enterFullscreen()
+        }
+        else
+        {
+            exitFullscreen();
+        }
+        inFSMode = !inFSMode;
+    })
+
+    // Function to enter fullscreen mode
+    function enterFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+        }
+    }// Function to exit fullscreen mode
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const planeName = document.querySelector("#game-name");
     const planeEngine = document.querySelector("#game-engine");
     const planeWing = document.querySelector("#game-wing");
@@ -316,14 +369,13 @@ document.addEventListener("DOMContentLoaded", function () {
         ["0.8", "0.82"]
     ]
 
-    submitButton.addEventListener("click", function()
-    {
+    submitButton.addEventListener("click", function () {
         finalPlaneName.innerHTML = planeName.value;
         finalPlaneDescription.innerHTML = planeDescription.value;
 
         let engineNumeber = planeEngine.value;
         let wingNumeber = planeWing.value;
-        
+
         finalPlaneCost.innerHTML = "$" + parseFloat(engineArray[parseInt(engineNumeber)][0]) + parseFloat(wingArray[parseInt(wingNumeber)][0]) + "M"
         finalPlaneSpeed.innerHTML = parseFloat(engineArray[parseInt(engineNumeber)][1]) + parseFloat(wingArray[parseInt(wingNumeber)][1]) + "KM/H"
     });
@@ -337,15 +389,15 @@ document.addEventListener("DOMContentLoaded", function () {
     var point = document.querySelector("#shooting-game-outer h3:nth-of-type(2)");
     var counter = document.querySelector("#shooting-game-outer h3:last-of-type");
     var gameButton = document.querySelector("#shooting-game-outer a");
-    
+
     var ballArray = [];
     var gameLoop; // to store the interval ID for game loop
     var animationID; // to store the animation frame ID
 
     var one = false;
-    
+
     gameButton.addEventListener("click", ChangeGameState);
-    
+
     class Ball {
         constructor(velX, velY, positionX, positionY) {
             this.velX = velX;
@@ -354,11 +406,11 @@ document.addEventListener("DOMContentLoaded", function () {
             this.positionY = positionY;
         }
     }
-    
+
     // To Change The State Of The Game
     function ChangeGameState() {
         gameState = !gameState;
-    
+
         if (gameState) {
             StartGame();
             StartAutoMove();
@@ -366,7 +418,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ResetGame();
         }
     }
-    
+
     // Reset The Game & All The Values To Its Default Value
     function ResetGame() {
         clearInterval(gameLoop);
@@ -384,10 +436,10 @@ document.addEventListener("DOMContentLoaded", function () {
         timer.innerHTML = "Timer: " + gameTimer;
         ballArray.length = 0;
         one = false;
-    
+
         window.cancelAnimationFrame(animationID); // Cancel animation frame
     }
-    
+
     // Begins & Loop The Game
     function StartGame() {
         gameButton.innerHTML = "Reset Game";
@@ -401,8 +453,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     spawnTimer = 0.0;
 
                     // Spawn Ball
-                    if (one == false)
-                    {
+                    if (one == false) {
                         createBall();
                         countBall();
                         one = true;
@@ -417,13 +468,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }, 1000); // 1000 milliseconds = 1 second
     }
-    
+
     // Function To Count The Number Of Ball In The Scene & Display It
     function countBall() {
         let balls = document.querySelectorAll(".ball");
         counter.innerHTML = "Counter: " + balls.length;
     }
-    
+
     // Function Used By Each Ball Spawned When Clicked On Increase The Points The Player Has
     function getShot() {
         points++;
@@ -432,12 +483,12 @@ document.addEventListener("DOMContentLoaded", function () {
         countBall();
         one = false;
     }
-    
+
     // Randomizer
     function RandomMovementRange(min, max) {
         return Math.round(Math.random() * (max - min) + min);
     }
-    
+
     function createBall() {
         let ball = document.createElement("div");
         ball.classList.add("ball");
@@ -446,36 +497,36 @@ document.addEventListener("DOMContentLoaded", function () {
         ball.style.backgroundPositionX = "0.17vw";
         ball.style.backgroundImage = "url(Image/game.jpg)";
         ball.addEventListener("click", getShot);
-    
+
         let board = document.getElementById("shooting-game-inner");
-    
+
         // Random initial position within game board
         let initialPosX = RandomMovementRange(0, board.clientWidth / 16 - 2.5); // Adjusted width calculation
         let initialPosY = RandomMovementRange(0, board.clientHeight / 16 - 2.5); // Adjusted height calculation
-    
+
         ballArray.push(new Ball(RandomMovementRange(-1, 1) / 10, RandomMovementRange(-1, 1) / 10, initialPosX, initialPosY));
-    
+
         shootingGameBoard.appendChild(ball);
     }
-    
+
     function StartAutoMove() {
         animationID = requestAnimationFrame(MoveWithCollision);
     }
-    
+
     function MoveWithCollision() {
         let board = document.getElementById("shooting-game-inner");
-    
+
         let balls = document.querySelectorAll(".ball");
-    
-        balls.forEach(function(ball, index) {
+
+        balls.forEach(function (ball, index) {
             let velX = ballArray[index].velX;
             let velY = ballArray[index].velY;
             let positionX = parseFloat(ballArray[index].positionX); // parse position to float
             let positionY = parseFloat(ballArray[index].positionY); // parse position to float
-    
+
             positionX += velX;
             positionY += velY;
-    
+
             // Handle collisions with game board boundaries
             if (positionX > board.clientWidth / 16 - 2.5) {
                 velX = -velX;
@@ -493,19 +544,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 velY = -velY;
                 positionY = 0;
             }
-    
+
             ballArray[index].velX = velX;
             ballArray[index].velY = velY;
             ballArray[index].positionX = positionX;
             ballArray[index].positionY = positionY;
-    
+
             ball.style.left = ballArray[index].positionX + "em"; // Adjusted to use px units
             ball.style.top = ballArray[index].positionY + "em"; // Adjusted to use px units
         });
-    
+
         animationID = requestAnimationFrame(MoveWithCollision);
     }
-    
+
     // Used To Keep Track Of Which Illustration The User Is Currently On
     var illustrationIndex = 0;
 
